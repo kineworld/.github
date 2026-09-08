@@ -10,3 +10,11 @@ KineWorld is a research-stage company in Hefei, China. We study compact, non-LLM
 - Data pipeline: [kine-datapipe](https://github.com/kineworld/kine-datapipe)
 
 Current evidence is internal and research-stage. We are actively seeking independent reproduction and technical collaboration.
+
+## 世界模型开放学习指南 · World Model Learning Guide
+
+从零基础直觉到数学、JEPA、动力学、3D、多模态、因果、评测与独立研究。包含10章中文主线、术语表、练习答案和无需显卡的CPU实验。
+
+**[开始学习 →](https://github.com/kineworld/.github/blob/main/world-models/README.md)**
+
+An evidence-first Chinese learning path with a CPU-only experiment. Educational material, not a claim of model leadership or a guarantee of expertise.
