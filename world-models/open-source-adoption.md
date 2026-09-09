@@ -8,6 +8,29 @@
 | --- | --- | --- | --- | --- |
 | MIRA | [kineworld/mira](https://github.com/kineworld/mira) | [mira-wm/mira](https://github.com/mira-wm/mira) | Apache-2.0 | 动作条件、多玩家世界模型研究；仅完成 Fork，尚未本地复现 |
 | Spark | [kineworld/spark](https://github.com/kineworld/spark) | [sparkjsdev/spark](https://github.com/sparkjsdev/spark) | MIT | THREE.js 的3D高斯渲染器；仅完成 Fork，不代表已接入产品 |
+| V-JEPA 2 | [kineworld/vjepa2](https://github.com/kineworld/vjepa2) | [facebookresearch/vjepa2](https://github.com/facebookresearch/vjepa2) | 主要 MIT，部分 Apache-2.0 | 视频隐空间预测研究；本次仅归档上游代码 |
+| DreamerV3 | [kineworld/dreamerv3](https://github.com/kineworld/dreamerv3) | [danijar/dreamerv3](https://github.com/danijar/dreamerv3) | MIT | 学习世界模型并用于策略学习；不是照片转3D |
+| Wan2.2 | [kineworld/Wan2.2](https://github.com/kineworld/Wan2.2) | [Wan-Video/Wan2.2](https://github.com/Wan-Video/Wan2.2) | Apache-2.0 | 视频生成基线；不能等同于可下载3D或真实物理模拟 |
+| TRELLIS.2 | [kineworld/TRELLIS.2](https://github.com/kineworld/TRELLIS.2) | [microsoft/TRELLIS.2](https://github.com/microsoft/TRELLIS.2) | MIT | 3D资产生成候选；不保证任意整屋场景重建 |
+| gsplat | [kineworld/gsplat](https://github.com/kineworld/gsplat) | [nerfstudio-project/gsplat](https://github.com/nerfstudio-project/gsplat) | Apache-2.0 | 高斯光栅化与训练基础设施 |
+| Nerfstudio | [kineworld/nerfstudio](https://github.com/kineworld/nerfstudio) | [nerfstudio-project/nerfstudio](https://github.com/nerfstudio-project/nerfstudio) | Apache-2.0 | NeRF与场景重建工程框架 |
+| COLMAP | [kineworld/colmap](https://github.com/kineworld/colmap) | [colmap/colmap](https://github.com/colmap/colmap) | BSD，依赖单独许可 | 多视图相机位姿、结构恢复 |
+| Open3D | [kineworld/Open3D](https://github.com/kineworld/Open3D) | [isl-org/Open3D](https://github.com/isl-org/Open3D) | MIT | 点云与网格处理、几何检查 |
+| viser | [kineworld/viser](https://github.com/kineworld/viser) | [viser-project/viser](https://github.com/viser-project/viser) | Apache-2.0 | Python侧交互式3D调试与可视化 |
+| glTF Transform | [kineworld/glTF-Transform](https://github.com/kineworld/glTF-Transform) | [donmccurdy/glTF-Transform](https://github.com/donmccurdy/glTF-Transform) | MIT | glTF/GLB处理与优化，不负责创造缺失几何 |
+| Physics-IQ | [kineworld/physics-IQ-benchmark](https://github.com/kineworld/physics-IQ-benchmark) | [google-deepmind/physics-IQ-benchmark](https://github.com/google-deepmind/physics-IQ-benchmark) | 软件 Apache-2.0；其他材料 CC-BY-4.0 | 物理视频评测工具；Fork不代表上榜或官方背书 |
+| VBench | [kineworld/VBench](https://github.com/kineworld/VBench) | [Vchitect/VBench](https://github.com/Vchitect/VBench) | Apache-2.0 | 视频质量多维评测，不是完整世界模型能力证明 |
+
+上述许可证栏说明仓库主体代码，并非依赖、权重、训练数据和示例素材的统一商用许可。本次新增12个 Fork，加上先前 MIRA 与 Spark 共14个。均未通过本次操作完成运行或产品接入。
+
+## 当前优先级
+
+- **产品交付优先**：Spark、glTF Transform、Open3D；先检查现有产品是否已经使用，避免重复接入。
+- **重建与生成候选**：gsplat、Nerfstudio、COLMAP、TRELLIS.2；输入要求、资产/场景区别和资源占用各不相同，按任务选择，不全部堆入运行环境。
+- **研究参考**：V-JEPA 2、DreamerV3、MIRA、Wan2.2；先确定实验问题，再选择基线。
+- **验证工具**：Physics-IQ、VBench、viser；基准数据权限和评测协议单独核实，开发与测试分离。
+
+Fork 保留上游作者、历史及许可证。对这些项目的选择表示与本项目方向有关，不是“全球最强”排名。没有运行证据的项目不得出现在已实现功能列表中。
 
 ### MIRA 可以做什么
 
