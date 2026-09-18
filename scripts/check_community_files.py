@@ -31,6 +31,15 @@ Checks
      `world-models/open-source-adoption.md`, which ATTRIBUTION.md links to instead of copying, so
      that the two cannot drift. Red when: a fork from `forks.txt` is missing from the canonical
      table, or a fork name appears in the first-party section of ATTRIBUTION.md.
+[C7] No hand-copied counts in externally visible prose.
+     A written number is a claim that goes stale without anyone noticing. A count of
+     repositories or forks may only appear if it is checked against forks.txt on every run. Red
+     when: a stated count disagrees with forks.txt, or a count is stated about something this
+     check cannot verify (so it cannot be kept honest). Spell-out forms ("fourteen
+     repositories") are red for the same reason -- they cannot be verified at all.
+
+     This check exists because the first draft of this change set wrote "14 repositories" into
+     profile/README.md and "Thirteen-plus repositories" into SUPPORT.md by hand.
 
 Usage
 -----
@@ -61,6 +70,35 @@ REQUIRED_OTHER_PATHS = [
 ]
 # Folders that must NOT hold issue templates: GitHub only reads `.github/ISSUE_TEMPLATE`.
 MISPLACED_ISSUE_TEMPLATE_DIRS = ["ISSUE_TEMPLATE", "docs/ISSUE_TEMPLATE"]
+
+COUNT_RE = re.compile(
+    r"\b(\d+)\s+(?:[A-Za-z-]+\s+){0,3}(repositories|repository|repos|repo|forks|fork)\b"
+)
+SPELLED_RE = re.compile(
+    r"\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|"
+    r"fifteen|sixteen|seventeen|eighteen|nineteen|twenty)(-plus)?\s+"
+    r"(?:[A-Za-z-]+\s+){0,3}(repositories|repository|repos|repo|forks|fork)\b",
+    re.IGNORECASE,
+)
+# Only files that are published (or served) as part of the organization's public face.
+COUNT_CLAIM_FILES = [
+    "profile/README.md",
+    "ATTRIBUTION.md",
+    "SUPPORT.md",
+    "CONTRIBUTING.md",
+    "GOVERNANCE.md",
+    "SECURITY.md",
+]
+
+# Words that turn a number into a taxonomy or a comparison rather than a count of items.
+# "Two kinds of repositories" describes categories, not a quantity; "no more than 6 repositories"
+# is a bound, not the current count. Neither is a countable claim, so neither is checked.
+TAXONOMY_RE = re.compile(
+    r"\b(?:kind|kinds|type|types|sort|sorts|category|categories|class|classes|group|groups)\b",
+    re.IGNORECASE,
+)
+COMPARATIVE_RE = re.compile(r"\b(?:than|least|most|fewer|more|under|over|about|roughly)\b\s*$",
+                            re.IGNORECASE)
 
 LINK_RE = re.compile(r"\[[^\]]*\]\(([^)]+)\)")
 FORM_EXT = ".yml"
@@ -216,6 +254,58 @@ def check_forms(root: str) -> int:
     return count
 
 
+def load_forks(root: str) -> set[str]:
+    path = os.path.join(root, "forks.txt")
+    if not os.path.isfile(path):
+        return set()
+    with open(path, encoding="utf-8") as handle:
+        return {
+            line.strip() for line in handle
+            if line.strip() and not line.strip().startswith("#")
+        }
+
+
+def check_counts(root: str) -> int:
+    """[C7] Every repository or fork count stated in prose must be machine-verifiable."""
+    forks = load_forks(root)
+    if not forks:
+        notes.append("[C7] forks.txt absent or empty; count claims unchecked")
+        return 0
+
+    claims = 0
+    for rel in COUNT_CLAIM_FILES:
+        path = os.path.join(root, rel)
+        if not os.path.isfile(path):
+            continue
+        with open(path, encoding="utf-8") as handle:
+            lines = handle.readlines()
+        for lineno, line in enumerate(lines, start=1):
+            for match in SPELLED_RE.finditer(line):
+                if TAXONOMY_RE.search(match.group(0)):
+                    continue  # "two kinds of repositories" is a taxonomy, not a count
+                claims += 1
+                fail(
+                    "C7",
+                    f"{rel}:{lineno} states '{match.group(0)}' in words, which cannot be "
+                    f"verified; use the checked digit form",
+                )
+            for match in COUNT_RE.finditer(line):
+                if TAXONOMY_RE.search(match.group(0)):
+                    continue
+                before = line[: match.start()]
+                if COMPARATIVE_RE.search(before):
+                    continue  # "no more than 6 repositories" is a bound, not the count
+                claims += 1
+                stated = int(match.group(1))
+                if stated != len(forks):
+                    fail(
+                        "C7",
+                        f"{rel}:{lineno} says '{match.group(0).strip()}' but forks.txt lists "
+                        f"{len(forks)}",
+                    )
+    return claims
+
+
 def check_attribution(root: str) -> int:
     forks_path = os.path.join(root, "forks.txt")
     attribution_path = os.path.join(root, "ATTRIBUTION.md")
@@ -260,12 +350,14 @@ def main(argv: list[str]) -> int:
     labels = check_labels(root)
     forms = check_forms(root)
     forks = check_attribution(root)
+    count_claims = check_counts(root)
 
     print(f"root: {root}")
     print(f"relative links checked: {checked_links}")
     print(f"issue forms checked:    {forms}")
     print(f"labels used:            {labels if labels else 'none'}")
     print(f"forks tracked:          {forks}")
+    print(f"counted claims checked: {count_claims}")
 
     for note in notes:
         print(note)
