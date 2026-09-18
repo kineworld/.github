@@ -1,0 +1,27 @@
+# Forks of upstream projects hosted in the kineworld organization.
+#
+# These are real GitHub forks: upstream authors, history, and licence files are retained.
+# They are listed separately from first-party work so that ATTRIBUTION.md cannot drift into
+# presenting someone else's code as ours. `check_community_files.py` [C6] enforces the split.
+#
+# One repository name per line. Lines starting with '#' are comments.
+#
+# Regenerate with:
+#   curl -s -H "Authorization: Bearer $TOKEN" \
+#     "https://api.github.com/orgs/kineworld/repos?per_page=100" \
+#   | python -c "import sys,json;[print(r['name']) for r in json.load(sys.stdin) if r['fork']]"
+
+VBench
+physics-IQ-benchmark
+Wan2.2
+dreamerv3
+glTF-Transform
+viser
+Open3D
+colmap
+nerfstudio
+gsplat
+TRELLIS.2
+vjepa2
+spark
+mira
