@@ -1,0 +1,86 @@
+name: Bug report
+description: Something in a first-party repository does not run, or runs differently than documented.
+title: "[bug] "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before filing: this organization has **one part-time maintainer** and no support SLA.
+        See [SUPPORT.md](https://github.com/kineworld/.github/blob/main/SUPPORT.md) for what is
+        in scope. For security issues, use
+        [SECURITY.md](https://github.com/kineworld/.github/blob/main/SECURITY.md) instead.
+
+        If the repository is a **fork** (see
+        [ATTRIBUTION.md](https://github.com/kineworld/.github/blob/main/ATTRIBUTION.md)), report
+        the bug upstream — we do not maintain that code.
+
+  - type: input
+    id: repo
+    attributes:
+      label: Repository and commit
+      description: Which repository, and the exact commit SHA you ran.
+      placeholder: kineworld/kine-jepa @ 3f2a1c9
+    validations:
+      required: true
+
+  - type: textarea
+    id: what_happened
+    attributes:
+      label: What happened
+      description: The observed behaviour. Paste real output, do not paraphrase it.
+      placeholder: |
+        Expected: ...
+        Observed: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: command
+    attributes:
+      label: Exact command
+      description: The full command line, copied verbatim.
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: traceback
+    attributes:
+      label: Full traceback or log
+      description: Complete output. Do not trim the traceback.
+      render: shell
+    validations:
+      required: false
+
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Python/Node version, GPU and VRAM, and any relevant pinned dependency versions.
+      placeholder: Windows 11, Python 3.13, RTX 5070 Ti Laptop 12GB, torch 2.x
+    validations:
+      required: true
+
+  - type: dropdown
+    id: clean_clone
+    attributes:
+      label: Does it reproduce from a clean clone?
+      description: This is the first question we will ask, so answer it now.
+      options:
+        - "Yes — reproduces from a fresh clone"
+        - "No — only in my existing environment"
+        - "Not tested"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmations
+      options:
+        - label: I am reporting a first-party repository, not a forked upstream project.
+          required: true
+        - label: I have not included secrets, credentials, private endpoints, or third-party user data in this report.
+          required: true

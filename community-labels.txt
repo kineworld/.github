@@ -1,0 +1,13 @@
+# Labels used by the organization-wide issue forms in .github/ISSUE_TEMPLATE.
+#
+# GitHub requires a label referenced by a default issue template to exist in this `.github`
+# repository AND in every repository that will use the template. An undeclared or missing label
+# breaks the form, so this list is the single source of truth: `check_community_files.py`
+# verifies that every label used by a form appears here, and the labels are created in each
+# repository from this list.
+#
+# One label per line. Lines starting with '#' are comments.
+
+bug
+reproduction
+evidence-challenge

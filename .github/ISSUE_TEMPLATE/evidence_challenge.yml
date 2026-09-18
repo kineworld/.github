@@ -1,0 +1,79 @@
+name: Evidence challenge
+description: You believe a published KineWorld claim is wrong, overstated, or unsupported.
+title: "[evidence] "
+labels:
+  - evidence-challenge
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is the most useful category of report we receive. A challenge is not treated as an
+        attack — if it holds up, the claim is **corrected in place with a visible note**, not
+        quietly deleted. See the evidence gate in
+        [GOVERNANCE.md](https://github.com/kineworld/.github/blob/main/GOVERNANCE.md).
+
+  - type: input
+    id: claim
+    attributes:
+      label: The exact claim you are challenging
+      description: Quote it verbatim, and say where it appears.
+      placeholder: "\"obj_disp significantly predicts error spikes (Fisher p=0.0018)\" — verification/experiments/KW-EXP-0006.md §7"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: What kind of problem is it?
+      options:
+        - "The number is wrong"
+        - "The number is right but the interpretation overreaches (e.g. correlation stated as causation)"
+        - "The statistics are misapplied (tolerance, multiple comparisons, sample independence)"
+        - "The evidence level is overstated (single seed / single checkpoint / single task presented as general)"
+        - "A confound or alternative explanation is not addressed"
+        - "The artifact does not support the claim at all"
+        - "Other"
+    validations:
+      required: true
+
+  - type: textarea
+    id: reasoning
+    attributes:
+      label: Why you think it is wrong
+      description: Concrete reasoning. If you can, show what the correct value or framing should be.
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence supporting your challenge
+      description: >-
+        A re-run, an arithmetic check against the committed artifact, a citation, or a worked
+        counter-example. Reasoning without any supporting evidence is still accepted, but it will
+        be labelled as an argument rather than a finding.
+    validations:
+      required: false
+
+  - type: dropdown
+    id: correction
+    attributes:
+      label: If your challenge holds, what happens to the claim?
+      options:
+        - "Retract it entirely"
+        - "Narrow it to what the data supports"
+        - "Correct a number or a citation"
+        - "Add a stated limitation without changing the result"
+        - "Unsure — that is the maintainer's call"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmations
+      options:
+        - label: I have read the artifact the claim is based on, not just the summary.
+          required: true
+        - label: This is an argument about the evidence, not about the person who produced it.
+          required: true

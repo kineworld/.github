@@ -1,0 +1,96 @@
+name: Reproduction report
+description: You attempted to reproduce a published KineWorld result. Success and failure are both wanted.
+title: "[reproduction] "
+labels:
+  - reproduction
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Reproduction attempts are the most valuable contribution to this project. A careful
+        **failed** reproduction is more useful than a vague success report — both get recorded.
+
+        Numbering below follows the evidence rules in
+        [CONTRIBUTING.md](https://github.com/kineworld/.github/blob/main/CONTRIBUTING.md):
+        paste raw numbers, do not summarise them.
+
+  - type: input
+    id: target
+    attributes:
+      label: What you tried to reproduce
+      description: The claim, report file, or manifest — with its path and commit SHA.
+      placeholder: verification/experiments/KW-EXP-0006.md @ 3f2a1c9
+    validations:
+      required: true
+
+  - type: dropdown
+    id: outcome
+    attributes:
+      label: Outcome
+      options:
+        - "Reproduced — numbers matched within the stated tolerance"
+        - "Reproduced with differences"
+        - "Did not reproduce"
+        - "Could not run it at all"
+    validations:
+      required: true
+
+  - type: textarea
+    id: numbers
+    attributes:
+      label: Your numbers vs the published numbers
+      description: Give both, side by side, with the unit and the statistic used (mean, median, CI).
+      placeholder: |
+        published: median error k=1 0.0217
+        mine:      median error k=1 0.0231  (n=96)
+    validations:
+      required: true
+
+  - type: input
+    id: hardware
+    attributes:
+      label: Hardware and runtime
+      description: CPU/GPU, VRAM, RAM, and wall-clock for the run.
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment and setup
+      description: OS, interpreter version, dependency pins or lockfile, data/weights source, and whether any gated asset was substituted.
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Evidence
+      description: Paste the commands you ran and the raw output. Link to a gist or branch if it is long.
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: divergence
+    attributes:
+      label: If it differed, what is your best explanation?
+      description: >-
+        Optional, and speculation is fine as long as it is labelled as speculation. Say what you
+        changed, what you could not obtain, and what you think the cause is. If you have no idea,
+        write "no explanation" — that is a valid and useful answer.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmations
+      options:
+        - label: Every number above comes from an actual run, not from reading the code or estimating.
+          required: true
+        - label: I have stated what I could not reproduce faithfully (missing weights, data, or gated assets).
+          required: true
+        - label: I understand this report may be published in the project's evidence record, and I am fine with being credited — or will ask to be anonymous.
+          required: true
