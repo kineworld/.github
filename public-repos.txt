@@ -1,0 +1,37 @@
+# Repositories that an anonymous visitor can actually open.
+#
+# A link to `https://github.com/kineworld/<name>` in a published document is a promise that the
+# page loads. A private repository breaks that promise with a 404, and nothing else here catches
+# it: the link checker in check_community_files.py only resolves relative paths. Two such links
+# were shipped in this change set (profile/README.md and ATTRIBUTION.md pointing at the private
+# spatial-0) before this file existed. C8 now fails on any link to a name not listed below.
+#
+# Regenerate with:
+#   curl -s -H "Authorization: Bearer $TOKEN" \
+#     "https://api.github.com/orgs/kineworld/repos?per_page=100" \
+#   | python -c "import sys,json;print('\n'.join(sorted(r['name'] for r in json.load(sys.stdin) if r['visibility']=='public')))"
+
+.github
+KineJing
+KineJing-CausalWM
+Open3D
+OpenDW
+TRELLIS.2
+VBench
+Wan2.2
+colmap
+cosmos
+dreamerv3
+glTF-Transform
+gsplat
+jepa-wms
+kine-bench
+kine-datapipe
+kine-jepa
+kineworld-site
+mira
+nerfstudio
+physics-IQ-benchmark
+spark
+viser
+vjepa2
