@@ -12,6 +12,7 @@ all authorship, copyright, and licence terms belong to the upstream project.
 
 | Repository | What it is | Status |
 | --- | --- | --- |
+| [`KineJing`](https://github.com/kineworld/KineJing) | Model integration, CPU baseline and trained small latent dynamics | See model card and evidence |
 | [`kine-jepa`](https://github.com/kineworld/kine-jepa) | Compact, action-conditioned latent world models | Research stage |
 | [`kine-bench`](https://github.com/kineworld/kine-bench) | Evaluation and evidence gating for world-model planning claims | Research stage |
 | [`kine-datapipe`](https://github.com/kineworld/kine-datapipe) | Turning video and simulation into world-model training data | Research stage |

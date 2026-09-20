@@ -19,7 +19,7 @@ Two kinds of repositories live here, and they should not be confused.
 
 **First-party work** — [`kine-jepa`](https://github.com/kineworld/kine-jepa) · [`kine-bench`](https://github.com/kineworld/kine-bench) · [`kine-datapipe`](https://github.com/kineworld/kine-datapipe) · [`kineworld-site`](https://github.com/kineworld/kineworld-site) · [`spatial-0`](https://github.com/kineworld/spatial-0)
 
-**Forks of upstream open-source projects** — 14 repositories, kept here for study and adaptation. These retain their upstream authors, history, and licences. Being hosted here is **not** a claim of authorship, and does not mean the code is running in our pipeline, has been reproduced, or is endorsed by its authors.
+**Forks of upstream open-source projects** — repositories kept here for study and adaptation. These retain their upstream authors, history, and licences. Being hosted here is **not** a claim of authorship, and does not mean the code is running in our pipeline, has been reproduced, or is endorsed by its authors.
 
 ← The full list, with upstream source, licence, intended use, and verification status, is in **[ATTRIBUTION.md](https://github.com/kineworld/.github/blob/main/ATTRIBUTION.md)**.
 
@@ -43,3 +43,11 @@ Two kinds of repositories live here, and they should not be confused.
 **[开始学习 →](https://github.com/kineworld/.github/blob/main/world-models/README.md)**
 
 An evidence-first Chinese learning path with a CPU-only experiment. Educational material, not a claim of model leadership or a guarantee of expertise.
+
+## 感谢开源贡献 · Thank you to the open-source community
+
+勘境感谢世界模型、视觉、几何与评测项目的原作者和贡献者。你们公开研究成果、代码与复现方法的开源精神，让我们能够站在已有成果之上继续探索。我们保留来源、署名、许可证和引用，以提交与实验记录说明勘境的新增工作。
+
+**[世界模型项目、勘境改动与验证状态](https://github.com/kineworld/.github/blob/main/world-models/open-source-adoption.md)** · **[KineJing 训练与集成](https://github.com/kineworld/KineJing)**
+
+Current changes cover CausalWM decoding, V-JEPA checkpoint loading, Wan input validation, Dreamer environment options, JEPA-WMs local predictor weights, OpenDW statistics, and Cosmos evaluation. Engineering tests do not establish model-quality or leaderboard gains. Thank you to all upstream authors for making this work possible.
