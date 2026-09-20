@@ -9,19 +9,23 @@
 # Regenerate with:
 #   curl -s -H "Authorization: Bearer $TOKEN" \
 #     "https://api.github.com/orgs/kineworld/repos?per_page=100" \
-#   | python -c "import sys,json;[print(r['name']) for r in json.load(sys.stdin) if r['fork']]"
+#   | python -c "import sys,json;print('\n'.join(sorted(r['name'] for r in json.load(sys.stdin) if r['fork'])))"
 
+KineJing-CausalWM
+Open3D
+OpenDW
+TRELLIS.2
 VBench
-physics-IQ-benchmark
 Wan2.2
+colmap
+cosmos
 dreamerv3
 glTF-Transform
-viser
-Open3D
-colmap
-nerfstudio
 gsplat
-TRELLIS.2
-vjepa2
-spark
+jepa-wms
 mira
+nerfstudio
+physics-IQ-benchmark
+spark
+viser
+vjepa2
