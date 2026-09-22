@@ -17,11 +17,11 @@ Current evidence is internal and research-stage. We are actively seeking indepen
 
 Two kinds of repositories live here, and they should not be confused.
 
-**First-party work** — [`kine-jepa`](https://github.com/kineworld/kine-jepa) · [`kine-bench`](https://github.com/kineworld/kine-bench) · [`kine-datapipe`](https://github.com/kineworld/kine-datapipe) · [`kineworld-site`](https://github.com/kineworld/kineworld-site) · `spatial-0` (private)
+**First-party work** — [`KineJing`](https://github.com/kineworld/KineJing) · [`kine-jepa`](https://github.com/kineworld/kine-jepa) · [`kine-bench`](https://github.com/kineworld/kine-bench) · [`kine-datapipe`](https://github.com/kineworld/kine-datapipe) · [`kineworld-site`](https://github.com/kineworld/kineworld-site) · [`.github`](https://github.com/kineworld/.github) · `spatial-0` and `kineworld-knowledge` (private)
 
 **Forks of upstream open-source projects** — repositories kept here for study and adaptation. These retain their upstream authors, history, and licences. Being hosted here is **not** a claim of authorship, and does not mean the code is running in our pipeline, has been reproduced, or is endorsed by its authors.
 
-← The full list, with upstream source, licence, intended use, and verification status, is in **[ATTRIBUTION.md](https://github.com/kineworld/.github/blob/main/ATTRIBUTION.md)**.
+← Both lists above, with upstream source, licence, intended use, status, and verification, are recorded in **[ATTRIBUTION.md](https://github.com/kineworld/.github/blob/main/ATTRIBUTION.md)**. That file is the record; this page is the introduction.
 
 ## Working with this organization
 
