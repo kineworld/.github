@@ -1,11 +1,16 @@
 # Guards
 
 Two files a repository copies into its test directory, plus three lines of YAML. That is
-the whole adoption. Nothing here is executed from this repository; it is a source of
+the whole adoption. Nothing here is imported from this repository; it is a source of
 copies, kept in one place so the copies cannot drift apart in intent -- and, since
 `.github/workflows/python-tests.yml` now compares every caller's copies against these, so
 that they cannot drift apart at all without the caller's own CI saying so. See *Keeping the
 copies honest* below.
+
+This repository is also a caller now. `world-models/labs/` holds a copy of
+`check_collection.py`, and `guide-checks.yml` runs it after the suite. It was the last
+repository in the organisation without one, which is the wrong way round for the repository
+that publishes them -- see kineworld/.github#10.
 
 ## The pair
 
@@ -81,6 +86,22 @@ empty are both legitimate -- absent means the directory holds no module-level `t
 functions, empty means the directory is a package and nothing more. Anything else has to be
 this file, because a hand-rolled `load_tests` is where "collects fewer tests than the source
 defines" lives.
+
+### The copy inside this repository
+
+The copy in `world-models/labs/` is compared against `guards/check_collection.py` by
+`guide-checks.yml`, with the same `tr -d '\r'` on both sides. It does not fetch from
+`raw.githubusercontent.com` the way the reusable workflow does, because here the canonical
+file is already in the checkout -- which is the one advantage of being the repository the
+copies come from, and worth taking: a comparison that needs no network cannot fail for
+network reasons and be misread as drift, or worse, be skipped.
+
+So there are two places a copy of this file can be compared, and the one that runs depends
+on where the copy is. A caller elsewhere gets the fetch-and-compare in
+`python-tests.yml`, before its dependencies are installed. This repository gets the `cmp`
+in `guide-checks.yml`, first among that job's steps. Neither is a substitute for the other,
+and a change to `guards/check_collection.py` has to keep both satisfied -- which is exactly
+what happens, since they compare the same pair of files.
 
 ## Why the count is derived instead of stored
 
