@@ -13,10 +13,12 @@ name: python tests (reusable)
 # workflow at all, a workflow that runs one named module instead of discovering, and a
 # suite whose tests the loader cannot see. See kineworld/.github#3 for the audit.
 #
-# This workflow refuses to run the suite when the collection guard is absent. That is
-# deliberate: a job that runs a suite without checking that the suite ran is the exact
-# failure mode this file exists to prevent, so it must not be possible to adopt half of
-# it.
+# This workflow refuses to run the suite when the collection guard is absent, or when the
+# copies of the guards the caller brought with it are not the ones in this repository. That
+# is deliberate: a job that runs a suite without checking that the suite ran is the exact
+# failure mode this file exists to prevent, so it must not be possible to adopt half of it.
+# And because the guards are copies rather than imports, a copy is a thing that can fall
+# behind -- which this repository's own copies did, in four places, within a day.
 
 on:
   workflow_call:
@@ -54,6 +56,74 @@ jobs:
         # actions/checkout v4
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
 
+      - name: Require the organisation's guards
+        # Two things, both about the files the caller brought with it. The guards are copied
+        # into every adopting repository, so the copy is what actually runs -- and a copy that
+        # has fallen behind keeps passing while its diagnostics quietly get worse. Measured on
+        # this pair: the older load_tests shim lets one unimportable module collapse a whole
+        # test directory into a single failing test, so every other test stops appearing in
+        # the suite output at all. The count still fails, but nothing says which module.
+        #
+        # Compared against the canonical files rather than a stored hash, so there is no
+        # number in this file to keep up to date -- the same reason check_collection.py
+        # derives its expected count instead of storing one. kineworld/.github is public,
+        # which is why this needs no token and no second checkout. If it ever stops being
+        # public this step needs a token, and it should keep failing until it has one: a
+        # drift check that cannot reach the original is not checking anything.
+        #
+        # Carriage returns are stripped before comparing. A contributor on Windows runs with
+        # core.autocrlf, which rewrites their checkout, and that is a property of their
+        # machine rather than drift in the file. Reporting it as drift would send them to the
+        # wrong fix, and Python does not care either way.
+        run: |
+          set -eu
+          dir="${{ inputs.test-dir }}"
+          base="https://raw.githubusercontent.com/kineworld/.github/main/guards"
+          tmp="$(mktemp -d)"
+
+          for f in check_collection.py load_tests.py; do
+            if ! curl -fsSL --retry 3 --retry-connrefused -o "$tmp/$f" "$base/$f"; then
+              echo "::error::Could not fetch $base/$f. This check cannot run, so the job stops rather than passing without it."
+              exit 1
+            fi
+            tr -d '\r' < "$tmp/$f" > "$tmp/$f.canonical"
+          done
+
+          # The collection guard is required. A job that runs a suite without proving the
+          # suite ran is the exact failure mode all of this exists to prevent, so partial
+          # adoption is not possible: no guard, no suite.
+          if [ ! -f "$dir/check_collection.py" ]; then
+            echo "::error file=$dir/check_collection.py::Missing collection guard. Copy guards/check_collection.py from kineworld/.github into $dir/ and re-run. This workflow does not run a suite it cannot prove ran."
+            exit 1
+          fi
+
+          status=0
+
+          tr -d '\r' < "$dir/check_collection.py" > "$tmp/cc.local"
+          if ! cmp -s "$tmp/check_collection.py.canonical" "$tmp/cc.local"; then
+            echo "::error file=$dir/check_collection.py::$dir/check_collection.py has drifted from kineworld/.github/guards/check_collection.py. Re-copy the canonical file: cp guards/check_collection.py $dir/check_collection.py"
+            diff -u --label "kineworld/.github/guards/check_collection.py" --label "$dir/check_collection.py" \
+              "$tmp/check_collection.py.canonical" "$tmp/cc.local" || true
+            status=1
+          fi
+
+          # The shim is optional. A directory whose tests are all inside TestCase classes
+          # needs no load_tests, and an empty __init__.py is a legitimate way to mark a
+          # package. Anything else has to be the canonical file, because a hand-rolled
+          # load_tests is precisely where "collects fewer tests than the source defines"
+          # lives -- which is the whole reason this file is shared instead of re-invented.
+          if [ -f "$dir/__init__.py" ] && [ -s "$dir/__init__.py" ]; then
+            tr -d '\r' < "$dir/__init__.py" > "$tmp/lt.local"
+            if ! cmp -s "$tmp/load_tests.py.canonical" "$tmp/lt.local"; then
+              echo "::error file=$dir/__init__.py::$dir/__init__.py is neither empty nor the canonical shim. Delete it (a directory of TestCase classes needs none), empty it (to mark a package), or replace it with kineworld/.github/guards/load_tests.py: cp guards/load_tests.py $dir/__init__.py"
+              diff -u --label "kineworld/.github/guards/load_tests.py" --label "$dir/__init__.py" \
+                "$tmp/load_tests.py.canonical" "$tmp/lt.local" || true
+              status=1
+            fi
+          fi
+
+          exit $status
+
       - name: Set up Python
         # actions/setup-python v5
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
@@ -69,13 +139,6 @@ jobs:
       - name: Post-install
         if: inputs.post-install != ''
         run: ${{ inputs.post-install }}
-
-      - name: Require the collection guard
-        run: |
-          if [ ! -f "${{ inputs.test-dir }}/check_collection.py" ]; then
-            echo "::error file=${{ inputs.test-dir }}/check_collection.py::Missing collection guard. Copy guards/check_collection.py from kineworld/.github into ${{ inputs.test-dir }}/ and re-run. This workflow will not run a suite it cannot prove ran."
-            exit 1
-          fi
 
       # Run before the guard on purpose. The guard's verdict is the last word, but when it
       # fails its message is a count, and the cause is often something the suite says

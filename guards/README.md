@@ -2,7 +2,10 @@
 
 Two files a repository copies into its test directory, plus three lines of YAML. That is
 the whole adoption. Nothing here is executed from this repository; it is a source of
-copies, kept in one place so the copies cannot drift apart in intent.
+copies, kept in one place so the copies cannot drift apart in intent -- and, since
+`.github/workflows/python-tests.yml` now compares every caller's copies against these, so
+that they cannot drift apart at all without the caller's own CI saying so. See *Keeping the
+copies honest* below.
 
 ## The pair
 
@@ -44,7 +47,40 @@ jobs:
 Then copy the file or files above that apply. The workflow **fails** when
 `check_collection.py` is absent, deliberately: a job that runs a suite without proving the
 suite ran is the exact failure mode all of this exists to prevent, so partial adoption must
-not be possible.
+not be possible. It also fails when a copy has fallen behind these files -- see below.
+
+## Keeping the copies honest
+
+A copy is a thing that can fall behind, and these did. Within a day of this pair being
+published, four of the six copies in use were behind the originals, on both files. So
+`.github/workflows/python-tests.yml` fetches these two files at `main` and compares the
+copies in the caller's test directory against them, before installing anything. A drifted
+copy fails the caller's own build, with a diff and the one-line command that fixes it.
+
+What the drift cost, measured on a directory holding one good module and one unimportable
+module:
+
+| shim | result |
+| --- | --- |
+| the older copy | `Ran 1 test` -- the good test never runs |
+| this file | `Ran 2 tests` -- `tests.Test_test_broken_import` ERROR, `tests.Test_test_good_test_alpha` ok |
+
+Both versions passed the collection guard on a real repository, because the count still came
+out right. What degraded was only what a failure could tell you: with the older shim, one
+module that cannot be imported keeps every other test in the directory out of the suite
+output, and the guard's count says "N invisible" without saying which module. So this was
+degraded rather than silent -- but degraded is what a copy does, and there is no reason to
+accept it when a `cmp` detects it.
+
+Carriage returns are stripped on both sides before comparing. A contributor on Windows runs
+with `core.autocrlf`, which rewrites their checkout; that is a property of their machine
+rather than drift in the file, and reporting it as drift would send them to the wrong fix.
+
+`load_tests.py` is compared only when the caller has a non-empty `__init__.py`. Absent and
+empty are both legitimate -- absent means the directory holds no module-level `test_*`
+functions, empty means the directory is a package and nothing more. Anything else has to be
+this file, because a hand-rolled `load_tests` is where "collects fewer tests than the source
+defines" lives.
 
 ## Why the count is derived instead of stored
 
