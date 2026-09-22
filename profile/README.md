@@ -17,7 +17,7 @@ Current evidence is internal and research-stage. We are actively seeking indepen
 
 Two kinds of repositories live here, and they should not be confused.
 
-**First-party work** — [`kine-jepa`](https://github.com/kineworld/kine-jepa) · [`kine-bench`](https://github.com/kineworld/kine-bench) · [`kine-datapipe`](https://github.com/kineworld/kine-datapipe) · [`kineworld-site`](https://github.com/kineworld/kineworld-site) · [`spatial-0`](https://github.com/kineworld/spatial-0)
+**First-party work** — [`kine-jepa`](https://github.com/kineworld/kine-jepa) · [`kine-bench`](https://github.com/kineworld/kine-bench) · [`kine-datapipe`](https://github.com/kineworld/kine-datapipe) · [`kineworld-site`](https://github.com/kineworld/kineworld-site) · `spatial-0` (private)
 
 **Forks of upstream open-source projects** — repositories kept here for study and adaptation. These retain their upstream authors, history, and licences. Being hosted here is **not** a claim of authorship, and does not mean the code is running in our pipeline, has been reproduced, or is endorsed by its authors.
 

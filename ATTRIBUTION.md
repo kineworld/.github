@@ -17,7 +17,7 @@ all authorship, copyright, and licence terms belong to the upstream project.
 | [`kine-bench`](https://github.com/kineworld/kine-bench) | Evaluation and evidence gating for world-model planning claims | Research stage |
 | [`kine-datapipe`](https://github.com/kineworld/kine-datapipe) | Turning video and simulation into world-model training data | Research stage |
 | [`kineworld-site`](https://github.com/kineworld/kineworld-site) | Public web presence for kineworld.com | In progress |
-| [`spatial-0`](https://github.com/kineworld/spatial-0) | Evidence-bound spatial reconstruction | Paused checkpoint |
+| `spatial-0` *(private — not linked)* | Evidence-bound spatial reconstruction | Paused checkpoint |
 | [`.github`](https://github.com/kineworld/.github) | Organization profile, community files, and the world-model learning guide | Maintained |
 
 Capability claims for first-party work are limited to what is backed by committed artifacts in

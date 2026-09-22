@@ -40,6 +40,13 @@ Checks
 
      This check exists because the first draft of this change set wrote "14 repositories" into
      profile/README.md and "Thirteen-plus repositories" into SUPPORT.md by hand.
+[C8] Every link to a repository in this organization points at one that is actually public.
+     Relative links are covered by C3, but an absolute link to a private repository 404s for
+     every anonymous visitor and nothing else here would notice. Red when: a document links to
+     `https://github.com/kineworld/<name>` and `<name>` is not in public-repos.txt.
+
+     This check exists because two such links shipped in this change set: profile/README.md and
+     ATTRIBUTION.md both linked the private spatial-0.
 
 Usage
 -----
@@ -99,6 +106,8 @@ TAXONOMY_RE = re.compile(
 )
 COMPARATIVE_RE = re.compile(r"\b(?:than|least|most|fewer|more|under|over|about|roughly)\b\s*$",
                             re.IGNORECASE)
+
+ORG_LINK_RE = re.compile(r"https://github\.com/kineworld/([A-Za-z0-9._-]+)")
 
 LINK_RE = re.compile(r"\[[^\]]*\]\(([^)]+)\)")
 FORM_EXT = ".yml"
@@ -306,6 +315,33 @@ def check_counts(root: str) -> int:
     return claims
 
 
+def check_public_links(root: str) -> int:
+    """[C8] Links to sibling repositories must point at ones a visitor can open."""
+    manifest = os.path.join(root, "public-repos.txt")
+    if not os.path.isfile(manifest):
+        notes.append("[C8] public-repos.txt absent; sibling-repository links unchecked")
+        return 0
+    with open(manifest, encoding="utf-8") as handle:
+        public = {
+            line.strip() for line in handle
+            if line.strip() and not line.strip().startswith("#")
+        }
+    if not public:
+        fail("C8", "public-repos.txt lists nothing; sibling links cannot be verified")
+        return 0
+
+    checked = 0
+    for path in iter_markdown(root):
+        rel = os.path.relpath(path, root).replace(os.sep, "/")
+        with open(path, encoding="utf-8") as handle:
+            text = handle.read()
+        for name in ORG_LINK_RE.findall(text):
+            checked += 1
+            if name not in public:
+                fail("C8", f"{rel} links to kineworld/{name}, which is not public")
+    return checked
+
+
 def check_attribution(root: str) -> int:
     forks_path = os.path.join(root, "forks.txt")
     attribution_path = os.path.join(root, "ATTRIBUTION.md")
@@ -351,9 +387,11 @@ def main(argv: list[str]) -> int:
     forms = check_forms(root)
     forks = check_attribution(root)
     count_claims = check_counts(root)
+    sibling_links = check_public_links(root)
 
     print(f"root: {root}")
     print(f"relative links checked: {checked_links}")
+    print(f"sibling links checked:  {sibling_links}")
     print(f"issue forms checked:    {forms}")
     print(f"labels used:            {labels if labels else 'none'}")
     print(f"forks tracked:          {forks}")
