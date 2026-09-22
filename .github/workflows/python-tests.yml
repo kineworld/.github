@@ -77,9 +77,12 @@ jobs:
             exit 1
           fi
 
-      - name: Confirm every test is visible to the runner
-        run: python ${{ inputs.test-dir }}/check_collection.py
-
+      # Run before the guard on purpose. The guard's verdict is the last word, but when it
+      # fails its message is a count, and the cause is often something the suite says
+      # plainly -- a test module that cannot be imported, for instance, which reads as
+      # "N tests invisible" and points at the wrong fix. Diagnostics first, verdict second.
+      # Neither step can be skipped and the job fails if either fails, so nothing is given
+      # up by the order.
       - name: Run the suite
         # The two forms are not interchangeable, which is why this branches:
         #
@@ -97,3 +100,6 @@ jobs:
           else
             python -m unittest discover -s ${{ inputs.test-dir }} -v
           fi
+
+      - name: Confirm every test is visible to the runner
+        run: python ${{ inputs.test-dir }}/check_collection.py
