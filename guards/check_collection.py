@@ -1,20 +1,21 @@
-"""Fail if the standard runner cannot see every test in ``tests/``.
+"""Fail if the standard runner cannot see every test in this directory.
 
-**This is the organisation-level copy.** Copy it into a repository as
-``tests/check_collection.py`` and call it from CI -- that is exactly what
-``.github/workflows/python-tests.yml`` in this repository expects to find, and it
-refuses to run a suite without it.
+**This is the organisation-level copy.** Drop it into a repository's test directory and
+call it from CI -- that is exactly what ``.github/workflows/python-tests.yml`` in this
+repository expects to find, and it refuses to run a suite without it. The directory does
+not have to be called ``tests``: it is wherever this file sat down, which is how a
+repository whose suite lives in ``world-models/labs/`` is covered as well.
 
-Why it exists: four self-authored repositories in this organisation hold test
-functions that no job will ever execute, in three different shapes (no workflow at
-all; a workflow that runs one named module instead of discovering; a suite whose tests
-the loader cannot see). The audit is in kineworld/.github#3.
+Why it exists: four self-authored repositories in this organisation hold test functions
+that no job will ever execute, in three different shapes (no workflow at all; a workflow
+that runs one named module instead of discovering; a suite whose tests the loader cannot
+see). The audit is in kineworld/.github#3.
 
 Why it derives the expected count with :mod:`ast` instead of storing a number: a
 hand-maintained count drifts out of date and then silently stops checking, which is the
 same class of mistake as the defect this guards against.
 
-    python tests/check_collection.py
+    python path/to/tests/check_collection.py
 """
 
 import ast
@@ -23,7 +24,23 @@ import sys
 import unittest
 
 TESTS_DIR = pathlib.Path(__file__).resolve().parent
-REPO_ROOT = TESTS_DIR.parent
+
+
+def find_repo_root(start):
+    """Walk up to the directory holding ``.git``.
+
+    Not simply ``start.parent``: this file may sit in a test directory that is not
+    directly under the repository root (``world-models/labs/`` in kineworld/.github is
+    one), and the import path has to be the repository root wherever the suite lives.
+    """
+    for candidate in (start, *start.parents):
+        if (candidate / ".git").exists():
+            return candidate
+    return start.parent
+
+
+REPO_ROOT = find_repo_root(TESTS_DIR)
+DIR_NAME = TESTS_DIR.name
 
 
 def count_tests_in(path):
@@ -50,8 +67,10 @@ def discover():
     run. A plain directory must be discovered WITHOUT a top-level directory, because
     ``discover`` raises ``ImportError`` when the start directory is not importable.
 
-    Repositories that already keep every test inside a ``TestCase`` have no
-    ``__init__.py`` and are fine either way; this picks the form their CI would use.
+    Repositories that keep every test inside a ``TestCase`` have no ``__init__.py`` and
+    are fine either way; this picks the form their CI would use, and
+    ``.github/workflows/python-tests.yml`` branches on the same rule so that the guard
+    and the run never disagree about what "collected" means.
     """
     if (TESTS_DIR / "__init__.py").exists():
         return unittest.TestLoader().discover(str(TESTS_DIR), top_level_dir=str(REPO_ROOT))
@@ -61,15 +80,15 @@ def discover():
 def main():
     files = sorted(TESTS_DIR.glob("test_*.py"))
     if not files:
-        raise SystemExit("no tests/test_*.py files found")
+        raise SystemExit("no test_*.py files found in %s/" % DIR_NAME)
 
     expected = sum(count_tests_in(f) for f in files)
 
     sys.path.insert(0, str(REPO_ROOT))
     collected = discover().countTestCases()
 
-    print("%d test files | %d test functions in source | %d collected by unittest"
-          % (len(files), expected, collected))
+    print("%d test files in %s/ | %d test functions in source | %d collected by unittest"
+          % (len(files), DIR_NAME, expected, collected))
 
     if collected != expected:
         missing = expected - collected
@@ -80,7 +99,7 @@ def main():
             % (collected, expected, missing)
         )
 
-    print("ok: every test in tests/ is visible to the runner")
+    print("ok: every test in %s/ is visible to the runner" % DIR_NAME)
 
 
 if __name__ == "__main__":
