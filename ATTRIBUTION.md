@@ -18,6 +18,7 @@ all authorship, copyright, and licence terms belong to the upstream project.
 | [`kine-datapipe`](https://github.com/kineworld/kine-datapipe) | Turning video and simulation into world-model training data | Research stage |
 | [`kineworld-site`](https://github.com/kineworld/kineworld-site) | Public web presence for kineworld.com | In progress |
 | `spatial-0` *(private — not linked)* | Evidence-bound spatial reconstruction | Paused checkpoint |
+| `kineworld-knowledge` *(private — not linked)* | Shared knowledge base, task records, and AI work coordination | Maintained |
 | [`.github`](https://github.com/kineworld/.github) | Organization profile, community files, and the world-model learning guide | Maintained |
 
 Capability claims for first-party work are limited to what is backed by committed artifacts in
@@ -48,6 +49,15 @@ A repository's `LICENSE` file covers the repository's **code**. It does not auto
 its dependencies, model weights, training data, or example media, each of which may carry separate
 terms. Where the licence of a bundled asset is unclear, treat it as **not** usable for commercial
 purposes until verified at the original source.
+
+Two concrete cases in this organization:
+
+- `CODE_OF_CONDUCT.md` is adapted from Contributor Covenant 2.1. Its authors release that text
+  under CC BY 4.0 and require attribution, which the file carries; the MIT licence at the root of
+  this repository does not relicense it.
+- `spatial-0` ships no blanket `LICENSE`, deliberately: its components carry different terms,
+  including non-commercial ones, and `docs/LICENSE_AUDIT.md` classifies them one by one. A single
+  file at the root would assert more than is true.
 
 ## Reporting an attribution problem
 
