@@ -1,10 +1,10 @@
 # KineWorld 开源复用入口
 
-更新：2026-09-20。这里区分上游开源项目、KineWorld 的工程适配和闭源服务。Fork 不代表原创、合作背书或已经运行成功。
+更新：2026-09-22。这里区分上游开源项目、KineWorld 的工程适配和闭源服务。Fork 不代表原创、合作背书或已经运行成功。
 
 ## 致谢：感谢开源精神
 
-勘境感谢 Aether AI、Meta FAIR 与 JEPA-WMs 作者、Alibaba Wan 团队、NVIDIA Cosmos 团队、Dexmal / OpenDW 作者、Danijar Hafner，以及 MIRA、Microsoft TRELLIS、World Labs Spark 和下列几何、数据、评测项目的所有贡献者。
+勘境感谢 Aether AI、Meta FAIR 与 JEPA-WMs 作者、Alibaba Wan 团队、NVIDIA Cosmos 团队、Dexmal / OpenDW 作者、Danijar Hafner、Yann LeCun 与 Randall Balestriero 团队的 Stable World Model / LeWM / Stable Pretraining、OpenDCAI 的 OpenWorldLib，以及 MIRA、Microsoft TRELLIS、World Labs Spark 和下列几何、数据、评测项目的所有贡献者。
 
 感谢你们愿意公开研究成果、代码与复现方法，让更多研究者和小团队能够学习、验证并继续探索。勘境的工作建立在这些贡献之上：原始贡献归属原作者，保留提交历史、许可证和引用；新增工作以可检查的改动、测试和实验记录说明。
 
@@ -17,6 +17,10 @@ We thank the original authors and the open-source community for sharing their re
 | CausalWM | [kineworld/KineJing-CausalWM](https://github.com/kineworld/KineJing-CausalWM) | [AetherLabsAI/CausalWM](https://github.com/AetherLabsAI/CausalWM) | LTX-2 Community License | 新增可选分块 VAE 解码与 CPU 累积；[验证边界](https://github.com/kineworld/KineJing-CausalWM/blob/main/KINEJING.md)；完整权重未运行 |
 | Cosmos 3 | [kineworld/cosmos](https://github.com/kineworld/cosmos) | [NVIDIA/cosmos](https://github.com/NVIDIA/cosmos) | OpenMDW-1.1 | 修复运动平滑度评测接受非有限分数的问题；[改动与测试](https://github.com/kineworld/cosmos/blob/main/KINEWORLD.md)；未复现模型分数 |
 | JEPA-WMs | [kineworld/jepa-wms](https://github.com/kineworld/jepa-wms) | [facebookresearch/jepa-wms](https://github.com/facebookresearch/jepa-wms) | CC-BY-NC-4.0；组件另有许可 | 非商用研究路径；新增本地预测器权重入口与未知参数报错；[改动与测试](https://github.com/kineworld/jepa-wms/blob/main/KINEWORLD.md) |
+| Stable World Model | [kineworld/stable-worldmodel](https://github.com/kineworld/stable-worldmodel) | [galilai-group/stable-worldmodel](https://github.com/galilai-group/stable-worldmodel) | MIT | 世界模型「采集-训练-规划评测」平台，带 8 个规划求解器（CEM / iCEM / MPPI / 预测采样 / SGD / PGD / 增广拉格朗日 / 离散 CEM）。上游代码**未改**；勘境只在 `kine-jepa` 侧加适配器接入其求解器，CPU 实测见 [SWM-PLANNING-v0](https://github.com/kineworld/kine-jepa/blob/main/EXPERIMENTS/SWM-PLANNING-v0/summary.json)；未复现其任何基准分数 |
+| LeWM | [kineworld/le-wm](https://github.com/kineworld/le-wm) | [lucas-maes/le-wm](https://github.com/lucas-maes/le-wm) | MIT | 稳定端到端 JEPA 世界模型，约 15M 参数、单卡可训；**仅完成 Fork**，未下载权重、未训练、未复现 |
+| Stable Pretraining | [kineworld/stable-pretraining](https://github.com/kineworld/stable-pretraining) | [galilai-group/stable-pretraining](https://github.com/galilai-group/stable-pretraining) | MIT | 基础模型/世界模型的最小预训练库，是 `stable-worldmodel[train]` 的依赖；**仅完成 Fork**，未运行 |
+| OpenWorldLib | [kineworld/OpenWorldLib](https://github.com/kineworld/OpenWorldLib) | [OpenDCAI/OpenWorldLib](https://github.com/OpenDCAI/OpenWorldLib) | Apache-2.0 | 跨多个世界模型系统的统一接口与能力地图，作接口参考；上游自述测试需 80GB / 141GB 显存，本机 12GB 不具备，**仅完成 Fork** |
 | OpenDW / DW05 | [kineworld/OpenDW](https://github.com/kineworld/OpenDW) | [dexmal/opendw](https://github.com/dexmal/opendw) | Apache-2.0 | 动作归一化改用 float64 与稳定方差合并，拒绝无效输入；[改动与测试](https://github.com/kineworld/OpenDW/blob/main/KINEWORLD.md)；未重训模型 |
 | MIRA | [kineworld/mira](https://github.com/kineworld/mira) | [mira-wm/mira](https://github.com/mira-wm/mira) | Apache-2.0 | 动作条件、多玩家世界模型研究；仅完成 Fork，尚未本地复现 |
 | Spark | [kineworld/spark](https://github.com/kineworld/spark) | [sparkjsdev/spark](https://github.com/sparkjsdev/spark) | MIT | THREE.js 的3D高斯渲染器；仅完成 Fork，不代表已接入产品 |
@@ -35,11 +39,14 @@ We thank the original authors and the open-source community for sharing their re
 
 上述许可证栏说明仓库主体代码，并非依赖、权重、训练数据和示例素材的统一商用许可。本批新增 Cosmos、JEPA-WMs、OpenDW，并纳入此前的 CausalWM 派生项目。上表逐项标注实改、测试和仍未验证的范围；其余项目保持参考状态。
 
+本批（2026-09-22）另新增 Stable World Model、LeWM、Stable Pretraining、OpenWorldLib 四个 JEPA 系上游。选择标准是"宁可复用现成实现，不重复造轮子"：`stable-worldmodel` 已经提供 kine-jepa 手写规划器所缺的求解器与评测协议，因此勘境不再扩自研搜索代码，改为写一层薄适配。四个 Fork 中只有 `stable-worldmodel` 被真正跑到（CPU、规划路径），另外三个尚未运行。
+
 ## 当前优先级
 
 - **产品交付优先**：Spark、glTF Transform、Open3D；先检查现有产品是否已经使用，避免重复接入。
 - **重建与生成候选**：gsplat、Nerfstudio、COLMAP、TRELLIS.2；输入要求、资产/场景区别和资源占用各不相同，按任务选择，不全部堆入运行环境。
 - **当前模型改进主线**：CausalWM、Cosmos、V-JEPA、JEPA-WMs、OpenDW、DreamerV3、Wan2.2；本批工程与数值修复已建立独立测试，接下来需要完整权重与同条件效果验证。MIRA 保持参考状态。
+- **正在复用的上游规划栈**：`stable-worldmodel`。它取代自研规划器的方向已经用同一任务、同一预算的对照实验验证过一次（CPU，单任务，三粒种子，不构成对训练后检查点的结论）；`le-wm` 与 `stable-pretraining` 是它的配套，尚未运行，`OpenWorldLib` 仅作接口参考。
 - **验证工具**：Physics-IQ、VBench、viser；基准数据权限和评测协议单独核实，开发与测试分离。
 
 Fork 保留上游作者、历史及许可证。对这些项目的选择表示与本项目方向有关，不是“全球最强”排名。没有运行证据的项目不得出现在已实现功能列表中。

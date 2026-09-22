@@ -16,6 +16,7 @@ KineJing
 KineJing-CausalWM
 Open3D
 OpenDW
+OpenWorldLib
 TRELLIS.2
 VBench
 Wan2.2
@@ -29,9 +30,12 @@ kine-bench
 kine-datapipe
 kine-jepa
 kineworld-site
+le-wm
 mira
 nerfstudio
 physics-IQ-benchmark
 spark
+stable-pretraining
+stable-worldmodel
 viser
 vjepa2

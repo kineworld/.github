@@ -25,7 +25,7 @@ Being explicit about this is part of the project's honesty.
   questions will not get one.
 - **No debugging of your environment.** We can confirm whether an issue is reproducible from a
   clean clone; we cannot administer your machine, driver stack, or cluster.
-- **No upstream projects.** 18 repositories here are forks. For anything in
+- **No upstream projects.** 22 repositories here are forks. For anything in
   [`ATTRIBUTION.md`](ATTRIBUTION.md), ask the upstream project — we do not maintain that code.
 - **No private model or infrastructure access.** We do not hand out weights, datasets, service
   credentials, or compute, and we do not run experiments on request.
