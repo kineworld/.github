@@ -40,10 +40,17 @@ import pkgutil
 import unittest
 
 
-def _named(case, name):
-    case.__name__ = name
-    case.__qualname__ = name
-    return case
+def _named(case_class, name):
+    """Name a generated TestCase class after what it stands for.
+
+    On the *class*, not the instance: ``TestCase.id()`` reads the class, so setting
+    ``__name__`` on an instance changes nothing and the id comes out as
+    ``tests._import_failure.<locals>._ImportFailure.runTest`` -- which names neither the
+    module nor the test, and that is the only thing these placeholders exist to do.
+    """
+    case_class.__name__ = name
+    case_class.__qualname__ = name
+    return case_class()
 
 
 def _wrapper(module_name, function_name, function):
@@ -53,7 +60,7 @@ def _wrapper(module_name, function_name, function):
         def runTest(self):  # unittest's own protocol name; it is not misspelled
             function()
 
-    return _named(_BareFunctionTest(), "Test_%s_%s" % (module_name, function_name))
+    return _named(_BareFunctionTest, "Test_%s_%s" % (module_name, function_name))
 
 
 def _import_failure(module_name, error):
@@ -77,7 +84,7 @@ def _import_failure(module_name, error):
         def runTest(self):
             raise error
 
-    return _named(_ImportFailure(), "Test_%s_import" % module_name)
+    return _named(_ImportFailure, "Test_%s_import" % module_name)
 
 
 def _iter_test_modules():
